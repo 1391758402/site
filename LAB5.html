@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Quadratic Equation Solver</title>
+</head>
+<body>
+    <script>
+        // Get coefficients from user
+        let a = parseFloat(prompt("Enter coefficient a:"));
+        let b = parseFloat(prompt("Enter coefficient b:"));
+        let c = parseFloat(prompt("Enter coefficient c:"));
+
+        // Calculate discriminant and roots
+        let delta = b * b - 4 * a * c;
+        let x1 = (-b + Math.sqrt(delta)) / (2 * a);
+        let x2 = (-b - Math.sqrt(delta)) / (2 * a);
+
+        // Display results
+        alert(`The roots are:\nx₁ = ${x1}\nx₂ = ${x2}`);
+        console.log(`The roots are:\nx₁ = ${x1}\nx₂ = ${x2}`);
+    </script>
+</body>
+</html>
