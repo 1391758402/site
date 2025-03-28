@@ -1,23 +1,88 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>Quadratic Equation Solver</title>
+    <style>
+        .equation input {
+            width: 60px;
+            margin: 0 5px;
+        }
+        #solution {
+            margin-top: 20px;
+            padding: 10px;
+            border: 1px solid #ccc;
+            min-height: 50px;
+        }
+    </style>
 </head>
 <body>
+    <div class="equation">
+        <input type="number" id="a" placeholder="a">x² + 
+        <input type="number" id="b" placeholder="b">x + 
+        <input type="number" id="c" placeholder="c"> = 0
+    </div>
+    <button onclick="solve()">求解</button>
+    <div id="solution"></div>
+
     <script>
-        // Get coefficients from user
-        let a = parseFloat(prompt("Enter coefficient a:"));
-        let b = parseFloat(prompt("Enter coefficient b:"));
-        let c = parseFloat(prompt("Enter coefficient c:"));
+        function solve() {
+            const a = parseFloat(document.getElementById('a').value) || 0;
+            const b = parseFloat(document.getElementById('b').value) || 0;
+            const c = parseFloat(document.getElementById('c').value) || 0;
+            
+            let solutionText = '';
+            
+            if (a === 0) {
+                // 处理线性方程
+                if (b === 0) {
+                    solutionText = c === 0 ? "所有实数都是解" : "无解";
+                } else {
+                    const x = -c / b;
+                    solutionText = `x = ${formatNumber(x)}`;
+                }
+            } else {
+                // 处理二次方程
+                const discriminant = b*b - 4*a*c;
+                
+                if (discriminant > 0) {
+                    const sqrtD = Math.sqrt(discriminant);
+                    const x1 = (-b + sqrtD)/(2*a);
+                    const x2 = (-b - sqrtD)/(2*a);
+                    solutionText = `x₁ = ${formatNumber(x1)}<br>x₂ = ${formatNumber(x2)}`;
+                } else if (discriminant === 0) {
+                    const x = -b/(2*a);
+                    solutionText = `x = ${formatNumber(x)}`;
+                } else {
+                    const real = -b/(2*a);
+                    const imaginary = Math.sqrt(-discriminant)/(2*a);
+                    solutionText = `x₁ = ${formatComplex(real, imaginary)}<br>x₂ = ${formatComplex(real, -imaginary)}`;
+                }
+            }
+            
+            document.getElementById('solution').innerHTML = solutionText;
+        }
 
-        // Calculate discriminant and roots
-        let delta = b * b - 4 * a * c;
-        let x1 = (-b + Math.sqrt(delta)) / (2 * a);
-        let x2 = (-b - Math.sqrt(delta)) / (2 * a);
+        function formatNumber(num) {
+            const rounded = num.toFixed(2);
+            return rounded.replace(/\.00$/, '').replace(/\.0$/, '');
+        }
 
-        // Display results
-        alert(`The roots are:\nx₁ = ${x1}\nx₂ = ${x2}`);
-        console.log(`The roots are:\nx₁ = ${x1}\nx₂ = ${x2}`);
+        function formatComplex(real, imaginary) {
+            const realStr = real !== 0 ? formatNumber(real) : '';
+            const absImag = Math.abs(imaginary);
+            
+            let imagStr = '';
+            if (absImag !== 0) {
+                imagStr = absImag === 1 ? 'i' : `${formatNumber(absImag)}i`;
+                imagStr = (imaginary > 0 ? '+' : '-') + imagStr;
+                
+                if (real === 0) {
+                    imagStr = imagStr.replace('+', '');
+                    if (imagStr === '-i') imagStr = '-i';
+                }
+            }
+            
+            return real === 0 && absImag !== 0 ? imagStr : [realStr, imagStr].join('');
+        }
     </script>
 </body>
 </html>
